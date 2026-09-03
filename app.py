@@ -69,6 +69,14 @@ def init_db():
     );
     """)
 
+    # Lightweight schema migration for existing demo databases: add private
+    # bill-photo columns to claims without deleting any existing data.
+    claim_columns = {row[1] for row in conn.execute("PRAGMA table_info(claims)").fetchall()}
+    for column in ("bill1", "bill2", "bill3"):
+        if column not in claim_columns:
+            conn.execute(f"ALTER TABLE claims ADD COLUMN {column} TEXT")
+    conn.commit()
+
     # Demo admin account
     admin = conn.execute("SELECT id FROM users WHERE email=?", ("admin@lostfound.demo",)).fetchone()
     if not admin:
@@ -79,6 +87,10 @@ def init_db():
         )
     conn.commit()
     conn.close()
+
+# Initialize the database on import so both Flask development mode and
+# production servers such as Gunicorn have the required tables.
+init_db()
 
 def login_required(f):
     @wraps(f)
@@ -334,17 +346,38 @@ def claim(item_id):
         lost_date = request.form["lost_date"]
         ownership_details = request.form["ownership_details"].strip()
 
+        bill_paths = []
+        for field in ("bill1", "bill2", "bill3"):
+            file = request.files.get(field)
+            if file and file.filename:
+                if not allowed_file(file.filename):
+                    flash("Bill photos must be PNG, JPG, JPEG or WEBP images.", "danger")
+                    return render_template("claim.html", item=item)
+                filename = secure_filename(
+                    f"claim_{session['user_id']}_{item_id}_{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{file.filename}"
+                )
+                file.save(os.path.join(UPLOAD_DIR, filename))
+                bill_paths.append(f"uploads/{filename}")
+            else:
+                bill_paths.append(None)
+
+        # A bill photo is now required as an additional ownership signal.
+        if not any(bill_paths):
+            flash("Please upload at least one photo of the original bill or purchase receipt.", "danger")
+            return render_template("claim.html", item=item)
+
         # AI score used for admin prioritization.
         score = calculate_claim_score(item, lost_location, ownership_details)
 
         conn = db()
         conn.execute("""
             INSERT INTO claims
-            (item_id,claimant_id,lost_location,lost_date,ownership_details,ai_score,created_at)
-            VALUES(?,?,?,?,?,?,?)
+            (item_id,claimant_id,lost_location,lost_date,ownership_details,bill1,bill2,bill3,ai_score,created_at)
+            VALUES(?,?,?,?,?,?,?,?,?,?)
         """, (
             item_id, session["user_id"], lost_location, lost_date,
-            ownership_details, score, datetime.now().isoformat()
+            ownership_details, bill_paths[0], bill_paths[1], bill_paths[2],
+            score, datetime.now().isoformat()
         ))
         conn.commit()
         conn.close()
@@ -353,6 +386,14 @@ def claim(item_id):
         return redirect(url_for("dashboard"))
 
     return render_template("claim.html", item=item)
+
+@app.route("/admin/claim-proof/<path:filename>")
+@login_required
+@admin_required
+def admin_claim_proof(filename):
+    """Serve uploaded bill/receipt images only to authenticated admins."""
+    from flask import send_from_directory
+    return send_from_directory(UPLOAD_DIR, filename)
 
 @app.route("/admin")
 @login_required
@@ -365,7 +406,8 @@ def admin():
                claimant.name AS claimant_name, claimant.email AS claimant_email,
                claimant.phone AS claimant_phone,
                finder.name AS finder_name, finder.email AS finder_email,
-               finder.phone AS finder_phone
+               finder.phone AS finder_phone,
+               claims.bill1, claims.bill2, claims.bill3
         FROM claims
         JOIN items ON claims.item_id=items.id
         JOIN users claimant ON claims.claimant_id=claimant.id
