@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card narrow">
+  <div class="pill">CREATE ACCOUNT</div>
+  <h1>Join FindBack</h1>
+  <p class="muted">Your account helps us safely connect lost and found items.</p>
+  <form method="post">
+    <label>Name<input name="name" required></label>
+    <label>Gmail / Email<input type="email" name="email" required></label>
+    <label>Phone number<input name="phone" required></label>
+    <label>Password<input type="password" name="password" minlength="6" required></label>
+    <button class="button full">Create account</button>
+  </form>
+  <p class="center muted">Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+</div>
+{% endblock %}

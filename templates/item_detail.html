@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="detail">
+  <div>
+    <div class="image-stack">
+      {% for img in [item.image1, item.image2, item.image3] %}
+        {% if img %}<img src="{{ url_for('static', filename=img) }}">{% endif %}
+      {% endfor %}
+      {% if not item.image1 %}<div class="placeholder large">📦</div>{% endif %}
+    </div>
+  </div>
+  <div class="detail-copy">
+    <div class="pill">POSSIBLE MATCH</div>
+    <h1>{{ item.title }}</h1>
+    <p class="lead">{{ item.description }}</p>
+    <div class="info"><b>Category</b><span>{{ item.category }}</span></div>
+    <div class="info"><b>Color</b><span>{{ item.color or "Not specified" }}</span></div>
+    <div class="info"><b>Found at</b><span>{{ item.location or "Not specified" }}</span></div>
+    <div class="privacy">🔒 <b>Privacy protection:</b> Finder's phone and email stay hidden until an admin verifies your ownership claim.</div>
+    {% if item.status == 'active' %}
+      <a class="button full" href="{{ url_for('claim', item_id=item.id) }}">This could be mine — Submit Claim</a>
+    {% else %}
+      <div class="success-box">✓ This item already has a verified claim and is being returned.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

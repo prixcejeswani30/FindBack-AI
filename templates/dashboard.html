@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><div class="pill">DASHBOARD</div><h1>Welcome, {{ session.name }}.</h1><p class="muted">Your lost-and-found activity in one place.</p></div>
+  <div class="actions">
+    <a class="button" href="{{ url_for('found') }}">+ Post Found Item</a>
+    <a class="button secondary" href="{{ url_for('search') }}">Find My Item</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div><b>{{ items|length }}</b><span>Items posted</span></div>
+  <div><b>{{ claims|length }}</b><span>My claims</span></div>
+</div>
+
+<h2>My Found Items</h2>
+<div class="grid">
+{% for item in items %}
+  <div class="card">
+    {% if item.image1 %}<img src="{{ url_for('static', filename=item.image1) }}">{% else %}<div class="placeholder">📦</div>{% endif %}
+    <div class="card-body"><h3>{{ item.title }}</h3><p>{{ item.description }}</p><span class="tag">{{ item.category }}</span>{% if item.status == 'claimed' %}<span class="status approved">verified claim</span>{% endif %}</div>
+  </div>
+{% else %}
+  <div class="empty">You haven't posted a found item yet.</div>
+{% endfor %}
+</div>
+
+<h2>My Claims</h2>
+<div class="claim-list">
+{% for claim in claims %}
+  <div class="claim-row">
+    <div>
+      <b>{{ claim.title }}</b>
+      <span class="muted">AI verification score: {{ claim.ai_score|round(1) }}%</span>
+    </div>
+    <span class="status {{ claim.status }}">{{ claim.status }}</span>
+  </div>
+  {% if claim.status == 'approved' %}
+    <div class="success-box verified-contact">
+      <b>✓ Claim verified by admin</b><br>
+      Return coordination contact: <b>{{ claim.finder_name }}</b> • {{ claim.finder_phone }} • {{ claim.finder_email }}
+    </div>
+  {% endif %}
+{% else %}
+  <div class="empty">No claims yet.</div>
+{% endfor %}
+</div>
+{% endblock %}

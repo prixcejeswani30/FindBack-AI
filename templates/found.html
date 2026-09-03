@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+  <div class="pill">I FOUND SOMETHING</div>
+  <h1>Post a found item</h1>
+  <p class="muted">Add enough detail for the AI to connect this item with its owner.</p>
+  <form method="post" enctype="multipart/form-data">
+    <div class="two">
+      <label>Item title<input name="title" placeholder="Blue wireless headphones" required></label>
+      <label>Category<select name="category" required><option>Electronics</option><option>Wallet / ID</option><option>Keys</option><option>Bag</option><option>Clothing</option><option>Other</option></select></label>
+    </div>
+    <label>Description<textarea name="description" placeholder="Describe the item, brand, model, distinctive marks..." required></textarea></label>
+    <div class="two">
+      <label>Color<input name="color" placeholder="Blue"></label>
+      <label>Location found<input name="location" placeholder="DTC Campus - Library"></label>
+    </div>
+    <label>Date found<input type="date" name="event_date"></label>
+    <label>Photos <span class="muted">(up to 3)</span>
+      <input type="file" name="image1" accept="image/*">
+      <input type="file" name="image2" accept="image/*">
+      <input type="file" name="image3" accept="image/*">
+    </label>
+    <button class="button">Publish Found Item</button>
+  </form>
+</div>
+{% endblock %}

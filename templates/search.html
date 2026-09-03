@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><div class="pill">AI SEARCH</div><h1>What did you lose?</h1><p class="muted">Describe it naturally. You don't need exact keywords.</p></div>
+</div>
+
+<form class="searchbar" method="post">
+  <input name="query" value="{{ query }}" placeholder="e.g. I lost my blue wireless headphones near the library" required>
+  <button class="button">Find Matches</button>
+</form>
+
+{% if query %}
+<div class="results-head"><h2>AI-ranked matches</h2><span class="muted">{{ results|length }} possible result{% if results|length != 1 %}s{% endif %}</span></div>
+<div class="grid">
+{% for result in results %}
+  {% set item = result.item %}
+  <div class="card match-card">
+    {% if item.image1 %}<img src="{{ url_for('static', filename=item.image1) }}">{% else %}<div class="placeholder">📦</div>{% endif %}
+    <div class="card-body">
+      <div class="score">{{ result.score }}% match</div>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.description }}</p>
+      <p class="muted">📍 {{ item.location or "Location not provided" }}</p>
+      <small>{{ result.reason }}</small>
+      <a class="button full" href="{{ url_for('item_detail', item_id=item.id) }}">View Possible Match</a>
+    </div>
+  </div>
+{% else %}
+  <div class="empty">No found items have been posted yet. Try the demo by posting one first.</div>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

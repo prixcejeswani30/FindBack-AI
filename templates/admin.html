@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><div class="pill">TRUST & SAFETY</div><h1>Admin Mediation</h1><p class="muted">Review ownership claims before people are connected.</p></div>
+</div>
+
+<div class="stats admin-stats">
+  <div><b>{{ claims|selectattr('status','equalto','pending')|list|length }}</b><span>Pending</span></div>
+  <div><b>{{ claims|selectattr('status','equalto','approved')|list|length }}</b><span>Approved</span></div>
+  <div><b>{{ claims|selectattr('status','equalto','rejected')|list|length }}</b><span>Rejected</span></div>
+</div>
+
+{% for c in claims %}
+<div class="admin-card">
+  <div class="admin-top">
+    <div>
+      <h2>{{ c.title }}</h2>
+      <span class="tag">{{ c.category }}</span>
+      {% if c.color %}<span class="tag">{{ c.color }}</span>{% endif %}
+    </div>
+    <div class="score big">{{ c.ai_score|round(1) }}%</div>
+  </div>
+
+  <div class="admin-grid">
+    <div>
+      <h4>Claimant</h4>
+      <p><b>{{ c.claimant_name }}</b><br>{{ c.claimant_email }}<br>{{ c.claimant_phone }}</p>
+      <h4>Claim details</h4>
+      <p><b>Lost:</b> {{ c.lost_location }}<br><b>Date:</b> {{ c.lost_date }}<br><b>Private detail:</b> {{ c.ownership_details }}</p>
+    </div>
+    <div>
+      {% if c.image1 %}<img class="admin-img" src="{{ url_for('static', filename=c.image1) }}">{% else %}<div class="placeholder admin-placeholder">📦</div>{% endif %}
+      <h4>Finder</h4>
+      <p><b>{{ c.finder_name }}</b><br>Contact hidden from claimant until approval.</p>
+    </div>
+  </div>
+
+  <div class="admin-actions">
+    <span class="status {{ c.status }}">{{ c.status }}</span>
+    {% if c.status == "pending" %}
+    <form method="post" action="{{ url_for('admin_claim_action', claim_id=c.id, action='approve') }}"><button class="button">✓ Approve Claim</button></form>
+    <form method="post" action="{{ url_for('admin_claim_action', claim_id=c.id, action='reject') }}"><button class="button danger">✕ Reject</button></form>
+    {% elif c.status == "approved" %}
+      <div class="success-box">✓ Verified. Return coordination contact is now available to the claimant.</div>
+    {% else %}
+      <div class="rejected-box">Claim rejected. Finder contact remains protected.</div>
+    {% endif %}
+  </div>
+</div>
+{% else %}
+<div class="empty">No claims yet. New ownership claims will appear here for mediation.</div>
+{% endfor %}
+{% endblock %}

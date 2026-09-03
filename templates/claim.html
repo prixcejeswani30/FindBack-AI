@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+  <div class="pill">OWNERSHIP VERIFICATION</div>
+  <h1>Claim: {{ item.title }}</h1>
+  <p class="muted">Don't only repeat the public description. Give details that help an admin verify that the item belongs to you.</p>
+  <form method="post">
+    <input type="hidden" name="item_description" value="{{ item.description }}">
+    <label>Where did you lose it?<input name="lost_location" required placeholder="Near the library"></label>
+    <label>Approximate date<input type="date" name="lost_date" required></label>
+    <label>Private ownership detail<textarea name="ownership_details" required placeholder="Example: a distinctive scratch/sticker, exact accessory, custom case, etc."></textarea></label>
+    <button class="button">Submit for Admin Verification</button>
+  </form>
+</div>
+{% endblock %}

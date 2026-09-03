@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="pill">AI-POWERED LOST & FOUND</div>
+    <h1>Lost something?<br><span>Let AI find it.</span></h1>
+    <p class="lead">FindBack connects lost belongings with people who found them using natural-language AI matching and a trusted admin verification layer.</p>
+    <div class="actions">
+      <a class="button" href="{{ url_for('register') }}">Start Finding</a>
+      <a class="button secondary" href="{{ url_for('login') }}">Login</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="search-demo">🔎 “I lost my blue headphones”</div>
+    <div class="match">
+      <div class="match-img">🎧</div>
+      <div><b>Blue Wireless Headphones</b><small>AI match</small></div>
+      <strong>94%</strong>
+    </div>
+    <div class="match">
+      <div class="match-img">🎒</div>
+      <div><b>Blue Backpack</b><small>Possible match</small></div>
+      <strong>41%</strong>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div><h3>01 • Upload</h3><p>Found items can be posted with multiple photos and details.</p></div>
+  <div><h3>02 • AI Match</h3><p>Describe what you lost in normal language and get ranked matches.</p></div>
+  <div><h3>03 • Verify</h3><p>An admin mediates claims before contact information is released.</p></div>
+</section>
+{% endblock %}
