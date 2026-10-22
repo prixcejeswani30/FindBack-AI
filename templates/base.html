@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#07111f">
+  <meta name="theme-color" content="#f5f4ef">
   <title>{% block title %}FindBack AI{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <nav class="nav">
-  <a class="brand" href="{{ url_for('index') }}">FindBack<span>AI</span></a>
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">f</span> FindBack</a>
   <div class="navlinks">
     {% if session.get('user_id') %}
       <a href="{{ url_for('dashboard') }}">Dashboard</a>
       <a href="{{ url_for('found') }}">I Found Something</a>
       <a href="{{ url_for('search') }}">Find My Item</a>
       {% if session.get('is_admin') %}<a class="admin-link" href="{{ url_for('admin') }}">Admin</a>{% endif %}
-      <a class="outline" href="{{ url_for('logout') }}">Logout</a>
+      <a class="outline" href="{{ url_for('logout') }}">Log out</a>
     {% else %}
       <a href="{{ url_for('login') }}">Login</a>
-      <a class="button small" href="{{ url_for('register') }}">Get Started</a>
+      <a class="button small" href="{{ url_for('register') }}">Create account</a>
     {% endif %}
   </div>
 </nav>
 
 <main class="container">
-  <div class="demo-bar">🎬 HACKINDIA DEMO MODE <span>•</span> Local MVP</div>
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% for category, message in messages %}
       <div class="flash {{ category }}">{{ message }}</div>
@@ -35,8 +34,8 @@
 </main>
 
 <footer>
-  <div>FindBack AI • AI-powered Lost & Found</div>
-  <div>HackIndia MVP</div>
+  <div><b>FindBack</b> · A little help finding what matters.</div>
+  <div>Lost &amp; Found for campus communities</div>
 </footer>
 </body>
 </html>
