@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="form-card narrow">
-  <div class="pill">WELCOME BACK</div>
+  <div class="pill">YOUR FINDBACK ACCOUNT</div>
   <h1>Login</h1>
   <form method="post">
     <label>Email<input type="email" name="email" required></label>
     <label>Password<input type="password" name="password" required></label>
-    <button class="button full">Continue to OTP</button>
+    <button class="button full">Continue</button>
   </form>
   <p class="center muted">No account? <a href="{{ url_for('register') }}">Register</a></p>
 </div>
