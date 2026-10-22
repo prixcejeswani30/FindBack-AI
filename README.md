@@ -1,44 +1,57 @@
-# FindBack AI — HackIndia Demo-Ready MVP
+# FindBack AI
 
-A working Flask + SQLite Lost & Found MVP designed for a live hackathon demo.
+FindBack AI is a campus-focused lost-and-found application that helps people report found belongings, search for missing items and verify ownership claims.
 
-## Demo flow
+## Features
 
-1. Person X registers and posts a found item with photos/details.
-2. Person Y registers and searches in natural language.
-3. AI ranks the found items using TF-IDF/cosine similarity plus explainable item/color/category signals.
-4. Person Y opens a possible match and submits private ownership evidence.
-5. Admin reviews the claim, sees the AI verification score and claimant evidence, then approves/rejects.
-6. If approved, the item becomes **claimed** and Person Y sees controlled return-coordination contact on their dashboard.
+- Account registration and sign-in with a verification step.
+- Found-item reports with descriptions, categories, locations, dates and up to three photos.
+- Natural-language search across active found-item reports.
+- Ranked matching based on text similarity and item details, with an explanation for each result.
+- Private ownership claims reviewed by an administrator.
+- Claim status tracking and controlled return coordination after approval.
 
-## Demo accounts
+## Technology
 
-**Admin**
-- Email: `admin@lostfound.demo`
-- Password: `admin123`
-- OTP: `123456`
+- Python and Flask
+- SQLite
+- Jinja templates, HTML and CSS
+- scikit-learn and the project's matching module
+- Werkzeug password hashing and session handling
 
-**Normal users**
-- Create two normal accounts (Person X and Person Y).
-- Demo OTP for every login: `123456`
+## Run locally
 
-## Run on laptop
+1. Install Python 3.10 or later.
+2. Create and activate a virtual environment.
+3. Install dependencies:
 
-```powershell
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-.\venv\Scripts\python.exe app.py
-```
+   ```powershell
+   python -m pip install -r requirements.txt
+   ```
 
-Open `http://127.0.0.1:5000`.
+4. Start the application:
 
-## Run on a phone for filming
+   ```powershell
+   python app.py
+   ```
 
-Connect the phone and laptop to the same Wi-Fi and open the LAN address printed by Flask, for example:
+5. Open http://127.0.0.1:5000.
 
-`http://192.168.x.x:5000`
+The application creates its SQLite database and required tables when it starts. Uploaded item images are stored under `static/uploads`.
 
-Keep the Flask terminal running while filming. If Windows Firewall blocks the phone, allow Python/Flask on the private network.
+## Account verification
 
-## Important
+The current local build uses a test verification code. Replace this with a proper verification provider before using the application with real accounts.
 
-OTP delivery is intentionally simulated for the hackathon. In production, use a real authentication/OTP provider.
+## Project structure
+
+- `app.py` — Flask routes, database access and application workflows.
+- `ai_matcher.py` — item matching and ranking.
+- `templates/` — page templates.
+- `static/style.css` — application styles.
+- `static/uploads/` — uploaded item photos.
+- `requirements.txt` — Python dependencies.
+
+## Before a public deployment
+
+Configure a strong secret key through the `SECRET_KEY` environment variable, use a production-ready database and file-storage service, and add production authentication, upload validation, rate limiting, backups and privacy/retention controls.
