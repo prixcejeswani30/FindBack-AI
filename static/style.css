@@ -41,3 +41,38 @@ input:focus,textarea:focus,select:focus{outline:2px solid #b7cdb9}
 .flash.success{background:#e8f1e8;color:#356b4b}.flash.danger{background:#f7eae8;color:#a64e49}.flash.warning{background:#f5f0e2;color:#8b6b2d}
 footer{border-color:var(--line);color:#858c80}
 @media(max-width:560px){.nav{background:#faf9f5}.hero h1{letter-spacing:-1.8px}}
+
+
+/* Slate-blue palette refinement */
+:root {
+  --accent: #526b86;
+  --accent2: #c98f78;
+}
+
+.navlinks a:hover { color: #526b86; }
+.brand-mark { background: #526b86; }
+.hero h1 span, .pill { color: #526b86; }
+
+.button {
+  background: #526b86;
+  border-color: #526b86;
+}
+.button:hover { background: #40566f; }
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #c5d2df;
+}
+
+.tag {
+  background: #edf1f5;
+  color: #526b86;
+}
+
+.privacy,
+.demo-note {
+  background: #eef2f6;
+  border-color: #dce4ec;
+  color: #526b86;
+}
